@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { LineChart, Legend, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import moment from 'moment';
 
 import { Chart, ChartDataset } from '../../models';
@@ -29,6 +29,7 @@ const DynamicLineChart = (props: DynamicLineChartProps) => {
                     scale="time"
                     type="number" />
                 <YAxis />
+                <Legend verticalAlign="top" />
 
                 {Object.values(config).map(chart => {
                     const { name, color } = chart;

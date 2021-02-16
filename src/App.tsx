@@ -51,7 +51,7 @@ function App() {
     const composeData = useCallback((count: number, config: ChartConfig[], datasets: ChartDataset[]) => {
         const nextData = new Array(count).fill({}).map((_, index) => {
             return ({
-                timestamp: Date.now() + index,
+                timestamp: Date.now() + index * UPDATE_FREQUENCY / count,
                 ...config.reduce((res, { name }, chart) => ({
                     ...res,
                     [name]: selected[name] ? datasets[chart * count + index] : null
