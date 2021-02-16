@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Layout, Checkbox, DynamicLineChart } from './components';
-import { Chart, ChartDataset } from './models';
+import { Layout, Legend, Chart, Checkbox, DynamicLineChart } from './components';
+import { Chart as ChartConfig, ChartDataset } from './models';
 import { getCharts, fetchChartData, DEFAULT_SIZE, CHUNK_SIZE, UPDATE_FREQUENCY } from './services';
 import './App.css';
 
 function App() {
-    const [chartConfig, setChartConfig] = useState<Chart[]>([]);
+    const [chartConfig, setChartConfig] = useState<ChartConfig[]>([]);
     const [data, setData] = useState<ChartDataset[]>([]);
     const [selected, setSelected] = useState<{ [name: string]: boolean }>({});
 
     useEffect(() => {
         const getChartsConfig = async () => {
-            const charts: Chart[] = await getCharts();
+            const charts: ChartConfig[] = await getCharts();
             const config = charts.map(({ name }) => ([name, true]));
 
-            setChartConfig(charts);
             setSelected(Object.fromEntries(config));
+            setChartConfig(charts);
         };
 
         getChartsConfig();
@@ -26,7 +26,7 @@ function App() {
         if (chartConfig.length) {
             updateChart();
         }
-    }, [chartConfig]);
+    }, [chartConfig, selected]);
 
     useEffect(() => {
         const intervalId = setInterval(() => updateChart(true), UPDATE_FREQUENCY);
@@ -48,7 +48,7 @@ function App() {
         return data;
     }, []);
 
-    const composeData = useCallback((count: number, config: Chart[], datasets: ChartDataset[]) => {
+    const composeData = useCallback((count: number, config: ChartConfig[], datasets: ChartDataset[]) => {
         const nextData = new Array(count).fill({}).map((_, index) => {
             return ({
                 timestamp: Date.now() + index,
@@ -62,14 +62,14 @@ function App() {
         const [_, ...prevData] = data;
 
         return [...prevData, ...nextData];
-    }, [data]);
+    }, [data, selected]);
 
-    const getChartData = async (chunk = false) => {
+    const getChartData = useCallback(async (chunk = false) => {
         const count = chunk ? CHUNK_SIZE : DEFAULT_SIZE;
         const datasets = await fetchData(count * chartConfig.length);
 
         return composeData(count, chartConfig, datasets || []);
-    };
+    }, [chartConfig, data]);
 
     const toggleChart = useCallback(async (e: any) => {
         const name = e.target.name;
@@ -94,22 +94,22 @@ function App() {
 
     return (
         <Layout.Container className="App">
-            <Layout.Flex>
+            <Chart.Wrapper>
                 <DynamicLineChart config={chartConfig} data={data} />
-            </Layout.Flex>
+            </Chart.Wrapper>
 
-            <Layout.FlexColumn>
+            <Legend.Wrapper>
                 {Object.keys(selected).map((key) => {
                     const isSelected = selected[key];
 
                     return (
-                        <Layout.Legend key={key}>
+                        <Legend.Item key={key}>
                             <Checkbox name={key} checked={isSelected} onChange={toggleChart}/>
                             <span>{key}</span>
-                        </Layout.Legend>
+                        </Legend.Item>
                     );
                 })}
-            </Layout.FlexColumn>
+            </Legend.Wrapper>
         </Layout.Container>
     );
 }

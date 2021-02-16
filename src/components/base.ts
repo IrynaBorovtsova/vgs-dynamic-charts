@@ -16,19 +16,33 @@ const FlexColumn = styled(Flex)`
     flex-direction: column;
 `;
 
-const Legend = styled.label`
+const LegendWrapper = styled(FlexColumn)`
+   min-width: 250px;
+`;
+
+const LegendItem = styled.label`
     align-items: center;
     display: flex;
     justify-content: center;
+    margin-left: 40px;
 `;
 
-const Chart = styled.div`
-    min-width: 400px;
-`;
+const ChartWrapper = styled(Flex)`
+    flex: 1;
+    height: 300px;
+`
 
 export const Layout = {
     Container,
     Flex,
-    FlexColumn,
-    Legend
+    FlexColumn
 };
+
+export const Chart = {
+    Wrapper: ChartWrapper
+}
+
+export const Legend = {
+    Wrapper: LegendWrapper,
+    Item: LegendItem
+}

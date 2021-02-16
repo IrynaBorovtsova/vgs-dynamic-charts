@@ -18,6 +18,5 @@ export const getCharts = () => {
 };
 
 export const fetchChartData = (size = DEFAULT_SIZE) => {
-    return fetch(`${API_URL}&length=${size}`)
-        .then(resp => resp.json());
+    return fetch(`${API_URL}&length=${size}`).then(resp => resp.json());
 }
