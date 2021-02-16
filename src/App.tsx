@@ -26,7 +26,7 @@ function App() {
         if (chartConfig.length) {
             updateChart();
         }
-    }, [chartConfig, selected]);
+    }, [chartConfig]);
 
     useEffect(() => {
         const intervalId = setInterval(() => updateChart(true), UPDATE_FREQUENCY);
@@ -34,7 +34,7 @@ function App() {
         return () => {
             intervalId && clearInterval(intervalId);
         };
-    }, [data]);
+    }, [data, selected]);
 
     const updateChart = async (chunk = false) => {
         const chartData = await getChartData(chunk);
@@ -90,7 +90,7 @@ function App() {
         } else {
             setData(prevData => prevData.map(item => ({ ...item, [name]: null })));
         }
-    }, [data]);
+    }, []);
 
     return (
         <Layout.Container className="App">

@@ -1,6 +1,5 @@
 import React from 'react';
 import { LineChart, Legend, Line, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import moment from 'moment';
 
 import { Chart, ChartDataset } from '../../models';
 
@@ -14,7 +13,7 @@ const defaultChartOptions = {
     height: '100%'
 };
 
-const formatDate = (unixTime?: number) => unixTime ? moment(unixTime).format('HH:mm:ss') : '';
+const formatDate = (unixTime: number) => new Date(unixTime).toLocaleTimeString();
 
 const DynamicLineChart = (props: DynamicLineChartProps) => {
     const { data, config } = props;
